@@ -1,5 +1,7 @@
 import 'package:d_validation/d_validation.dart';
+import 'package:design_pattern_framework_demo/custom_rule.dart';
 
+//
 class UserModel {
   String email;
   String password;
@@ -12,23 +14,13 @@ class UserModel {
     required this.age,
     required this.phone,
   });
-
-  factory UserModel.empty() => UserModel(email: '', password: '', age: 18, phone: '');
 }
 
 class UserValidation extends DValidator<UserModel> {
   UserValidation() {
     ruleFor((user) => user.email, key: 'email').notEmpty().validEmail();
-
     ruleFor((user) => user.age, key: 'age').min(18, message: 'Minimum age is 18 years');
-  }
-
-  void validateUser(UserModel user) {
-    final result = validate(user);
-    if (result.isValid) {
-      print('User is valid');
-    } else {
-      print('User is invalid');
-    }
+    ruleFor((user) => user.phone, key: 'phone').mustHaveNumber().notEmpty();
+    ruleFor((user) => user.password, key: 'password').customValidPassword();
   }
 }
